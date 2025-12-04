@@ -1,0 +1,41 @@
+@Library('SEND_BUILD_ALERT') _
+
+pipeline {
+
+	agent any
+
+	tools {
+		jdk "java_21"
+		gradle "gradle_9"
+	}
+
+	stages{
+		stage("cloning repo"){
+			steps{
+				echo "cloning repo... "
+				git branch: "[GIT_BRANCH]", url: "[GIT_REPO_URL]"
+			}
+		}
+
+		stage("do some actions"){
+			steps{
+				echo "doing something..."
+			}
+		}
+	}
+
+	post{
+		success{
+			echo "build sucess"
+		}
+
+		failure{
+			echo "build failed"
+		}
+
+		always{
+			SendBuildAlert('malinga.simuchimba@gmail.com')
+			//SendBuildAlert() uses default email set
+		}
+	}
+}
